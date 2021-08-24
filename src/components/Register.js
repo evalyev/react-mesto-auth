@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { AppContext } from "../contexts/AppContext";
 import * as auth from "../utils/auth"
 import InfoTooltip from "./InfoTooltip";
@@ -9,7 +9,6 @@ export default function Register(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
-  const history = useHistory();
 
   function changeEmail(e) {
     setEmail(e.target.value);
@@ -26,12 +25,14 @@ export default function Register(props) {
       .then(res => {
         if (res) {
           // history.push("/sign-in");
+          setEmail("");
+          setPassword("");
           setIsSuccess(true);
-          props.onOpen(true);
+          props.onOpen();
         }
         else {
           setIsSuccess(false);
-          props.onOpen(true);
+          props.onOpen();
         }
       })
       .catch(error => {

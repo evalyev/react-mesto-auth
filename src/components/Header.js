@@ -2,9 +2,11 @@ import logo from '../images/logo.svg';
 import { Link, Route } from "react-router-dom";
 import React from 'react';
 import { AppContext } from '../contexts/AppContext';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Header(props) {
   const loggedIn = React.useContext(AppContext);
+  const currentUser = React.useContext(CurrentUserContext);
 
   return (
     <header className="header">
@@ -14,9 +16,9 @@ function Header(props) {
       {loggedIn && (
         <div className="header__user-info">
           <p className="header__email">
-            email@mail.com
+            {currentUser?.email}
           </p>
-          <button className="header__btn-exit" type="button">
+          <button className="header__btn-exit" type="button" onClick={props.onExit}>
             Выйти
           </button>
         </div>

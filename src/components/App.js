@@ -12,10 +12,11 @@ import AddPlacePopup from './AddPlacePopup';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { AppContext } from '../contexts/AppContext';
 import { useState, useEffect } from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
+import * as auth from "../utils/auth";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
+  const [isLoggOut, setIsLoggOut] = useState(false);
 
 
   const [selectedCard, setSelectedCard] = useState(null);
@@ -122,22 +124,41 @@ function App() {
       })
   }
 
-  useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then(([userInfo, cardItems]) => {
-        setCurrentUser(userInfo);
-        setCards(cardItems);
-      })
-      .catch((err) => {
-        console.log(err); // выведем ошибку в консоль
-      });
+  function handleLogin() {
+    setLoggedIn(true);
+    setIsLoggOut(!isLoggOut);
+  }
 
-  }, []);
+  function handleExit() {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    setIsLoggOut(!isLoggOut);
+  }
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      Promise.all([api.getUserInfo(), api.getInitialCards(), auth.getContent(token)])
+        .then(([userInfo, cardItems, authInfo]) => {
+          if (authInfo.data) {
+            authInfo = authInfo.data;
+            userInfo.email = authInfo.email;
+            setCurrentUser(userInfo);
+            setCards(cardItems);
+            setLoggedIn(true);
+          }
+        })
+        .catch((err) => {
+          console.log(err); // выведем ошибку в консоль
+        });
+    }
+
+  }, [isLoggOut]);
 
   return (
     <CurrentUserContext.Provider value={currentUser} >
       <AppContext.Provider value={loggedIn} >
-        <Header />
+        <Header onExit={handleExit} />
 
         {/* <Main onEditProfile={onEditProfile} onEditAvatar={onEditAvatar} onAddPlace={onAddPlace} onCardClick={handleCardClick}
                 cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} /> */}
@@ -186,14 +207,14 @@ function App() {
         />
 
         <Route path="/sign-in">
-          <Login onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} onOpen={setIsInfoTooltipPopupOpen} />
+          <Login onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} onOpen={onInfoTooltip} onLogin={handleLogin} />
         </Route>
         <Route path="/sign-up">
-          <Register onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} onOpen={setIsInfoTooltipPopupOpen} />
+          <Register onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} onOpen={onInfoTooltip} />
         </Route>
 
         <Footer />
-        
+
       </AppContext.Provider>
     </CurrentUserContext.Provider>
   );
