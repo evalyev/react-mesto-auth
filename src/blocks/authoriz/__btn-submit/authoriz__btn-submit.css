@@ -1,0 +1,14 @@
+.authoriz__btn-submit {
+  margin-top: 216px;
+  width: 358px;
+  height: 50px;
+  outline: none;
+  background: #FFFFFF;
+  border-radius: 2px;
+  border: none;
+}
+
+.authoriz__btn-submit:hover {
+  opacity: 0.85;
+  cursor: pointer;
+}

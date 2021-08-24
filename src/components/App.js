@@ -10,7 +10,13 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { AppContext } from '../contexts/AppContext';
 import { useState, useEffect } from 'react';
+import { Route, Redirect } from 'react-router-dom';
+import Login from './Login';
+import Register from './Register';
+import ProtectedRoute from './ProtectedRoute';
+
 
 function App() {
 
@@ -20,6 +26,9 @@ function App() {
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [cards, setCards] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(true);
+  const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
+
 
   const [selectedCard, setSelectedCard] = useState(null);
 
@@ -35,6 +44,10 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
+  function onInfoTooltip() {
+    setIsInfoTooltipPopupOpen(true);
+  }
+
   function handlePopupClose(evt) {
     if (evt.target.classList.contains('popup_opened') || evt.target.classList.contains('popup__close')) {
       closeAllPopups();
@@ -46,6 +59,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpen(false);
+    setIsInfoTooltipPopupOpen(false);
   }
 
   function handleCardClick(card) {
@@ -122,25 +136,63 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser} >
-      <Header />
+      <AppContext.Provider value={loggedIn} >
+        <Header />
 
-      <Main onEditProfile={onEditProfile} onEditAvatar={onEditAvatar} onAddPlace={onAddPlace} onCardClick={handleCardClick}
-        cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />
+        {/* <Main onEditProfile={onEditProfile} onEditAvatar={onEditAvatar} onAddPlace={onAddPlace} onCardClick={handleCardClick}
+                cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} /> */}
 
-      <Footer />
+        <ProtectedRoute
+          onEditProfile={onEditProfile} onEditAvatar={onEditAvatar} onAddPlace={onAddPlace} onCardClick={handleCardClick}
+          cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete}
+          component={Main} path="/"
+        />
 
-      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={handlePopupClose} onUpdateUser={handleUpdateUser} />
+        <Footer />
 
-      <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={handlePopupClose} onUpdateAvatar={handleUpdateAvatar} />
+        {/* <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={handlePopupClose} onUpdateUser={handleUpdateUser} /> */}
 
-      <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handlePopupClose} onAddPlace={handleAddPlaceSubmit} />
+        <ProtectedRoute
+          isOpen={isEditProfilePopupOpen} onClose={handlePopupClose} onUpdateUser={handleUpdateUser}
+          component={EditProfilePopup} path="/"
+        />
 
-      <PopupWithForm name="delete" title="Вы уверены?" btnText="Да" onClose={handlePopupClose}>
+        {/* <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={handlePopupClose} onUpdateAvatar={handleUpdateAvatar} /> */}
 
-      </PopupWithForm>
+        <ProtectedRoute
+          isOpen={isEditAvatarPopupOpen} onClose={handlePopupClose} onUpdateAvatar={handleUpdateAvatar}
+          component={EditAvatarPopup} path="/"
+        />
 
-      <ImagePopup card={selectedCard} onClose={handlePopupClose} isOpen={isImagePopupOpen} />
+        {/* <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handlePopupClose} onAddPlace={handleAddPlaceSubmit} /> */}
 
+        <ProtectedRoute
+          isOpen={isAddPlacePopupOpen} onClose={handlePopupClose} onAddPlace={handleAddPlaceSubmit}
+          component={AddPlacePopup} path="/"
+        />
+
+        {/* <PopupWithForm name="delete" title="Вы уверены?" btnText="Да" onClose={handlePopupClose} /> */}
+
+        <ProtectedRoute
+          name="delete" title="Вы уверены?" btnText="Да" onClose={handlePopupClose}
+          component={PopupWithForm} path="/"
+        />
+
+        {/* <ImagePopup card={selectedCard} onClose={handlePopupClose} isOpen={isImagePopupOpen} /> */}
+
+        <ProtectedRoute
+          card={selectedCard} onClose={handlePopupClose} isOpen={isImagePopupOpen}
+          component={ImagePopup} path="/"
+        />
+
+        <Route path="/sign-in">
+          <Login onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} />
+        </Route>
+        <Route path="/sign-up">
+          <Register onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} />
+        </Route>
+
+      </AppContext.Provider>
     </CurrentUserContext.Provider>
   );
 }

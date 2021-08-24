@@ -1,7 +1,9 @@
 .header {
   width: calc(100% - 400px);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   padding-top: 45px;
   padding-bottom: 41px;
   border-bottom: 1px solid rgba(84,84,84,0.7);

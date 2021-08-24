@@ -5,6 +5,14 @@
 
 @import url(./blocks/header/header.css);
 @import url(./blocks/header/__logo/header__logo.css);
+@import url(./blocks/header/__link/header__link.css);
+
+@import url(./blocks/authoriz/authoriz.css);
+@import url(./blocks/authoriz/__title/authoriz__title.css);
+@import url(./blocks/authoriz/__form/authoriz__form.css);
+@import url(./blocks/authoriz/__input-text/authoriz__input-text.css);
+@import url(./blocks/authoriz/__btn-submit/authoriz__btn-submit.css);
+@import url(./blocks/authoriz/__link/authoriz__link.css);
 
 @import url(./blocks/content/content.css);
 @import url(./blocks/profile/profile.css);
@@ -38,6 +46,8 @@
 @import url(./blocks/popup/__input-error/popup__input-error.css);
 @import url(./blocks/popup/__input-error/_active/popup__input-error_active.css);
 @import url(./blocks/popup/__submit/_type/popup__submit_type_delete.css);
+@import url(./blocks/popup/__text-info-tooltip/popup__text-info-tooltip.css);
+@import url(./blocks/popup/__img-info-tooltip/popup__img-info-tooltip.css);
 
 @import url(./blocks/elements/elements.css);
 @import url(./blocks/element/element.css);
