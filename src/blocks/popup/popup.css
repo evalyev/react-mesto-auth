@@ -1,0 +1,18 @@
+.popup {
+  position: fixed;
+  display: flex;
+  visibility: hidden;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: visibility 0.5s, opacity 0.5s linear;
+}
+
+.popup:hover {
+  cursor: pointer;
+}

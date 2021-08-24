@@ -1,0 +1,28 @@
+.popup__close {
+  border: none;
+  background: none;
+  padding: 29px;
+  background-image: url(../../../images/form__close.svg);
+  background-size: 100%;
+  position: absolute;
+  top: -48.28px;
+  right: -48.28px;
+  transition: opacity 0.3s;
+}
+
+.popup__close:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.popup__close:focus {
+  outline: none;
+}
+
+@media (max-width: 570px) {
+  .popup__close {
+    right: 0;
+    padding: 18px;
+    top: -50px;
+  }
+}

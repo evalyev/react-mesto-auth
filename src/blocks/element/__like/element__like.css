@@ -1,0 +1,18 @@
+.element__like {
+  padding: 9.5px 11px;
+  background: none;
+  background-image: url(../../../images/element__like.svg);
+  border: none;
+  transition: opacity 0.3s;
+  align-self: center;
+}
+
+.element__like:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.element__like:focus {
+  border: none;
+  outline: none;
+}

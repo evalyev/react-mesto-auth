@@ -1,0 +1,28 @@
+.header {
+  width: calc(100% - 400px);
+  display: flex;
+  flex-direction: column;
+  padding-top: 45px;
+  padding-bottom: 41px;
+  border-bottom: 1px solid rgba(84,84,84,0.7);
+}
+
+@media (min-width: 1280px) {
+  .header {
+    width: 880px;
+  }
+}
+
+@media (max-width: 1084px) {
+  .header {
+    width: calc(100% - 100px);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding-top: 28px;
+    width: 100%;
+    padding-bottom: 31px;
+  }
+}
