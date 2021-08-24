@@ -1,0 +1,14 @@
+.header__btn-exit {
+  outline: none;
+  border: none;
+  background: none;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+  color: #A9A9A9;
+}
+
+.header__btn-exit:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}

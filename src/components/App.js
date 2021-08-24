@@ -26,7 +26,7 @@ function App() {
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [cards, setCards] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
 
 
@@ -148,7 +148,7 @@ function App() {
           component={Main} path="/"
         />
 
-        <Footer />
+
 
         {/* <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={handlePopupClose} onUpdateUser={handleUpdateUser} /> */}
 
@@ -186,12 +186,14 @@ function App() {
         />
 
         <Route path="/sign-in">
-          <Login onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} />
+          <Login onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} onOpen={setIsInfoTooltipPopupOpen} />
         </Route>
         <Route path="/sign-up">
-          <Register onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} />
+          <Register onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} onOpen={setIsInfoTooltipPopupOpen} />
         </Route>
 
+        <Footer />
+        
       </AppContext.Provider>
     </CurrentUserContext.Provider>
   );
