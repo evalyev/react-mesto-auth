@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { AppContext } from "../contexts/AppContext";
 import InfoTooltip from "./InfoTooltip";
-import * as auth from "../utils/auth";
 
 export default function Login(props) {
   const loggedIn = React.useContext(AppContext);
@@ -22,17 +21,12 @@ export default function Login(props) {
     if (!email || !password) {
       return;
     }
-    auth.authorize(email, password)
-      .then((data) => {
-        if (data.token) {
+    props.onLogin(email, password)
+      .then(res => {
+        if (res) {
           setEmail("");
           setPassword("");
-          props.onLogin();
         }
-      })
-      .catch(err => {
-        props.onOpen();
-        console.log(err); // запускается, если пользователь не найден
       })
   }
 

@@ -17,6 +17,7 @@ import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
 import * as auth from "../utils/auth";
+import InfoTooltip from './InfoTooltip';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
+  const [isInfoTooltipPopupSuccess, setIsInfoTooltipPopupSuccess] = useState(false);
   const [isLoggOut, setIsLoggOut] = useState(false);
 
 
@@ -46,8 +48,9 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
-  function onInfoTooltip() {
+  function onInfoTooltip(isSuccess) {
     setIsInfoTooltipPopupOpen(true);
+    setIsInfoTooltipPopupSuccess(isSuccess);
   }
 
   function handlePopupClose(evt) {
@@ -124,9 +127,19 @@ function App() {
       })
   }
 
-  function handleLogin() {
-    setLoggedIn(true);
-    setIsLoggOut(!isLoggOut);
+  function handleLogin(email, password) {
+    return auth.authorize(email, password)
+      .then((data) => {
+        if (data.token) {
+          setIsLoggOut(!isLoggOut);
+          console.log(data)
+          return true;
+        }
+      })
+      .catch(err => {
+        onInfoTooltip(false);
+        console.log(err); // запускается, если пользователь не найден
+      })
   }
 
   function handleExit() {
@@ -137,6 +150,7 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    console.log(1)
     if (token) {
       Promise.all([api.getUserInfo(), api.getInitialCards(), auth.getContent(token)])
         .then(([userInfo, cardItems, authInfo]) => {
@@ -169,43 +183,6 @@ function App() {
           component={Main} path="/"
         />
 
-
-
-        {/* <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={handlePopupClose} onUpdateUser={handleUpdateUser} /> */}
-
-        <ProtectedRoute
-          isOpen={isEditProfilePopupOpen} onClose={handlePopupClose} onUpdateUser={handleUpdateUser}
-          component={EditProfilePopup} path="/"
-        />
-
-        {/* <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={handlePopupClose} onUpdateAvatar={handleUpdateAvatar} /> */}
-
-        <ProtectedRoute
-          isOpen={isEditAvatarPopupOpen} onClose={handlePopupClose} onUpdateAvatar={handleUpdateAvatar}
-          component={EditAvatarPopup} path="/"
-        />
-
-        {/* <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handlePopupClose} onAddPlace={handleAddPlaceSubmit} /> */}
-
-        <ProtectedRoute
-          isOpen={isAddPlacePopupOpen} onClose={handlePopupClose} onAddPlace={handleAddPlaceSubmit}
-          component={AddPlacePopup} path="/"
-        />
-
-        {/* <PopupWithForm name="delete" title="Вы уверены?" btnText="Да" onClose={handlePopupClose} /> */}
-
-        <ProtectedRoute
-          name="delete" title="Вы уверены?" btnText="Да" onClose={handlePopupClose}
-          component={PopupWithForm} path="/"
-        />
-
-        {/* <ImagePopup card={selectedCard} onClose={handlePopupClose} isOpen={isImagePopupOpen} /> */}
-
-        <ProtectedRoute
-          card={selectedCard} onClose={handlePopupClose} isOpen={isImagePopupOpen}
-          component={ImagePopup} path="/"
-        />
-
         <Route path="/sign-in">
           <Login onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} onOpen={onInfoTooltip} onLogin={handleLogin} />
         </Route>
@@ -214,6 +191,13 @@ function App() {
         </Route>
 
         <Footer />
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={handlePopupClose} onUpdateUser={handleUpdateUser} />
+        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={handlePopupClose} onUpdateAvatar={handleUpdateAvatar} />
+        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handlePopupClose} onAddPlace={handleAddPlaceSubmit} />
+        <PopupWithForm name="delete" title="Вы уверены?" btnText="Да" onClose={handlePopupClose} />
+        <ImagePopup card={selectedCard} onClose={handlePopupClose} isOpen={isImagePopupOpen} />
+
+        <InfoTooltip name="info" isOpen={isInfoTooltipPopupOpen} onClose={handlePopupClose} isSuccess={isInfoTooltipPopupSuccess} />
 
       </AppContext.Provider>
     </CurrentUserContext.Provider>

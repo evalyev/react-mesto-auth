@@ -39,7 +39,6 @@ export const authorize = (email, password) => {
       return data;
     }
   })
-  .catch(err => console.log(err))
 }; 
 
 export const getContent = (token) => {
