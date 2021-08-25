@@ -75,7 +75,7 @@ function App() {
   function handleUpdateUser(data) {
     api.setUserInfo(data.name, data.about)
       .then(res => {
-        setCurrentUser(res);
+        setCurrentUser({...currentUser, name: res.name, about: res.about});
         setIsEditProfilePopupOpen(false);
       })
       .catch((err) => {
@@ -86,7 +86,7 @@ function App() {
   function handleUpdateAvatar(data) {
     api.setAvatar(data.avatar)
       .then(newUserInfo => {
-        setCurrentUser(newUserInfo);
+        setCurrentUser({...currentUser, avatar: newUserInfo.avatar});
         setIsEditAvatarPopupOpen(false);
       })
       .catch((err) => {
@@ -127,12 +127,30 @@ function App() {
       })
   }
 
+  function handleRegister(email, password) {
+    return auth.register(email, password)
+      .then(res => {
+        if (res) {
+          onInfoTooltip(true);
+          return true;
+        }
+        else {
+          onInfoTooltip(false);
+          return false;
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        onInfoTooltip(false);
+      })
+
+  }
+
   function handleLogin(email, password) {
     return auth.authorize(email, password)
       .then((data) => {
         if (data.token) {
           setIsLoggOut(!isLoggOut);
-          console.log(data)
           return true;
         }
       })
@@ -150,7 +168,6 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log(1)
     if (token) {
       Promise.all([api.getUserInfo(), api.getInitialCards(), auth.getContent(token)])
         .then(([userInfo, cardItems, authInfo]) => {
@@ -187,7 +204,7 @@ function App() {
           <Login onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} onOpen={onInfoTooltip} onLogin={handleLogin} />
         </Route>
         <Route path="/sign-up">
-          <Register onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} onOpen={onInfoTooltip} />
+          <Register onClose={handlePopupClose} isOpen={isInfoTooltipPopupOpen} onOpen={onInfoTooltip} onRegister={handleRegister} />
         </Route>
 
         <Footer />

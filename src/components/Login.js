@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { AppContext } from "../contexts/AppContext";
-import InfoTooltip from "./InfoTooltip";
 
 export default function Login(props) {
   const loggedIn = React.useContext(AppContext);
@@ -41,8 +40,6 @@ export default function Login(props) {
           <button className="authoriz__btn-submit" type="submit" >Войти</button>
         </form>
       </section>
-
-      <InfoTooltip name="info" isOpen={props.isOpen} onClose={props.onClose} isSuccess={false} />
     </>
   )
 }
